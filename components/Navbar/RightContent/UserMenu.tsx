@@ -4,15 +4,23 @@ import {FaUserCircle,FaUserSlash} from "react-icons/fa"
 import {MdOutlineLogin} from "react-icons/md"
 import { signOut, User } from 'firebase/auth';
 import { auth } from '../../../firebase/clientApp';
-import { useSetRecoilState } from 'recoil';
+import { useResetRecoilState, useSetRecoilState } from 'recoil';
 import { authModalState } from '../../../atoms/authModalAtom';
+import { clubState } from '../../../atoms/clubsAtom';
 
 type UserMenuProps = {
     user?:User | null;
 };
 
 const UserMenu:React.FC<UserMenuProps> = ({user}) => {
+    const resetClubState=useResetRecoilState(clubState);
     const setAuthModalState=useSetRecoilState(authModalState);
+
+    const logout= async ()=>{
+        await signOut(auth);
+        resetClubState();
+    }
+
     return (
         <Menu>
             <MenuButton >
@@ -40,7 +48,7 @@ const UserMenu:React.FC<UserMenuProps> = ({user}) => {
                                 Profile
                             </Flex>
                         </MenuItem>
-                        <MenuItem fontSize="10pt" fontWeight={700} _hover={{bg:"blue.200"}} onClick={()=>signOut(auth)}>
+                        <MenuItem fontSize="10pt" fontWeight={700} _hover={{bg:"blue.200"}} onClick={logout}>
                             <Flex align="center">
                                 <Icon as={MdOutlineLogin} mr={2} fontSize={20}/>
                                 Logout

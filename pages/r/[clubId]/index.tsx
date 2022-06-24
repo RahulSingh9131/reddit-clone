@@ -7,6 +7,8 @@ import safeJsonStringify from "safe-json-stringify";
 import NotFound from '../../../components/Club/NotFound';
 import Header from '../../../components/Club/Header';
 import PageContent from '../../../components/Layout/PageContent';
+import CreatePostLink from '../../../components/Club/CreatePostLink';
+import Posts from '../../../components/Posts/Posts';
 
 type clubPageProps = {
     clubData: club,
@@ -23,7 +25,8 @@ const ClubPage:React.FC<clubPageProps> = ({clubData}) => {
             <Header clubData={clubData}/>
             <PageContent>
                 <>
-                    <div>LHS</div>
+                    <CreatePostLink/>
+                    <Posts clubData={clubData}/>
                 </>
                 <>
                     <div>RHS</div>
