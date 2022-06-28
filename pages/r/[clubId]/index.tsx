@@ -1,7 +1,7 @@
 import { doc, getDoc } from 'firebase/firestore';
 import { GetServerSidePropsContext } from 'next';
-import React from 'react';
-import { club } from '../../../atoms/clubsAtom';
+import React, { useEffect } from 'react';
+import { club, clubState } from '../../../atoms/clubsAtom';
 import { firestore } from '../../../firebase/clientApp';
 import safeJsonStringify from "safe-json-stringify";
 import NotFound from '../../../components/Club/NotFound';
@@ -9,16 +9,25 @@ import Header from '../../../components/Club/Header';
 import PageContent from '../../../components/Layout/PageContent';
 import CreatePostLink from '../../../components/Club/CreatePostLink';
 import Posts from '../../../components/Posts/Posts';
+import { useSetRecoilState } from 'recoil';
+import About from '../../../components/Club/About';
 
 type clubPageProps = {
     clubData: club,
 };
 
 const ClubPage:React.FC<clubPageProps> = ({clubData}) => {
-    
+    const setClubStateValue=useSetRecoilState(clubState);
     if(!clubData){
         return <NotFound/>
     }
+
+    useEffect(()=>{
+        setClubStateValue((prev)=>({
+            ...prev,
+            currentClub:clubData,
+        }))
+    },[])
     
     return (
         <>
@@ -29,7 +38,7 @@ const ClubPage:React.FC<clubPageProps> = ({clubData}) => {
                     <Posts clubData={clubData}/>
                 </>
                 <>
-                    <div>RHS</div>
+                    <About clubData={clubData}/>
                 </>
             </PageContent>
         </>

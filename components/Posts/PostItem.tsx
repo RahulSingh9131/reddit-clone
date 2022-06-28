@@ -1,9 +1,8 @@
-import { Flex, Icon, Image, Skeleton, Stack, Text } from '@chakra-ui/react';
+import { Alert, AlertIcon, Flex, Icon, Image, Skeleton, Spinner, Stack, Text } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { Post } from '../../atoms/postsAtom';
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsChat, BsDot } from "react-icons/bs";
-import { FaReddit } from "react-icons/fa";
 import {
   IoArrowDownCircleOutline,
   IoArrowDownCircleSharp,
@@ -13,34 +12,57 @@ import {
   IoBookmarkOutline,
 } from "react-icons/io5";
 import moment from 'moment';
+import { useRouter } from 'next/router';
 
 type PostItemProps = {
     post:Post;
     userIsCreator:boolean;
     userVoteValue?:number;
-    onVote:()=>{};
-    onDeletePost:()=>{};
-    onSelectPost:()=>void;
+    onVote:(event:React.MouseEvent<SVGElement,MouseEvent>,post:Post,vote:number,clubId:string)=>void;
+    onDeletePost:(post:Post)=>Promise<Boolean>;
+    onSelectPost?:(post:Post)=>void;
 };
 
 const PostItem:React.FC<PostItemProps> = ({post,onDeletePost,onSelectPost,onVote,userIsCreator,userVoteValue}) => {
     const [loadingImage,setLoadingImage]=useState(true)
+    const [error,setError]=useState("");
+    const [loadingDelete,setLoadingDelete]=useState(false)
+    const singlePostPage=!onSelectPost;
+    const router=useRouter();
+
+    const handleDelete= async (event:React.MouseEvent<HTMLDivElement,MouseEvent>)=>{
+        event.stopPropagation();
+        setLoadingDelete(true);
+        try {
+            const success= await onDeletePost(post);
+            if(!success){
+                throw new Error("Failed to delete Post")
+            }
+            if(singlePostPage){
+                router.push(`/r/${post.clubId}`);
+            }
+        } catch (error:any) {
+            setError(error.message);
+        }
+        setLoadingDelete(false);
+    }
+
     return (
         <Flex 
             border="1px solid" 
             bg="white" 
-            borderColor="gray.300" 
-            borderRadius={4} 
-            _hover={{borderColor:"gray.500"}} 
-            cursor="pointer" 
-            onClick={onSelectPost}
+            borderColor={singlePostPage?"white":"gray.400"}
+            borderRadius={singlePostPage?"4px 4px 0px 0px":"4px"} 
+            _hover={{borderColor:singlePostPage?"none":"gray.500"}} 
+            cursor={singlePostPage?"default":"pointer"} 
+            onClick={()=>onSelectPost && onSelectPost(post)}
         >
-            <Flex direction="column" align="center" bg="gray.100" p={2} width="40px" borderRadius={4}>
+            <Flex direction="column" align="center" bg={singlePostPage?"white":"gray.100"} p={2} width="40px" borderRadius={4}>
                 <Icon 
                 as={userVoteValue===1?IoArrowUpCircleSharp:IoArrowUpCircleOutline}
                 color={userVoteValue===1?"brand.100":"gray.600"}
                 fontSize={22}
-                onClick={onVote}
+                onClick={(event)=>onVote(event,post,1,post.clubId)}
                 cursor="pointer"
                 />
                 <Text fontSize="9pt">{post.voteStatus}</Text>
@@ -48,11 +70,17 @@ const PostItem:React.FC<PostItemProps> = ({post,onDeletePost,onSelectPost,onVote
                 as={userVoteValue=== -1?IoArrowDownCircleSharp:IoArrowDownCircleOutline}
                 color={userVoteValue=== -1?"#4379ff":"gray.600"}
                 fontSize={22}
-                onClick={onVote}
+                onClick={(event)=>onVote(event,post,-1,post.clubId)}
                 cursor="pointer"
                 />
             </Flex>
             <Flex direction="column" width="100%">
+                {error && (
+                    <Alert status="error">
+                        <AlertIcon/>
+                        <Text mr={2}>{error}</Text>
+                    </Alert>
+                )}
                 <Stack spacing={1} p="10px">
                     <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">
                         <Text fontWeight={400}>
@@ -85,9 +113,15 @@ const PostItem:React.FC<PostItemProps> = ({post,onDeletePost,onSelectPost,onVote
                         <Text fontSize="9pt">Save</Text>
                     </Flex>
                     {userIsCreator && (
-                        <Flex align="center" p="8px 10px" borderRadius={4} _hover={{bg:"gray.200"}} cursor="pointer" onClick={onDeletePost}>
-                           <Icon as={AiOutlineDelete} mr={2} />
-                           <Text fontSize="9pt">Delete</Text>
+                        <Flex align="center" p="8px 10px" borderRadius={4} _hover={{bg:"gray.200"}} cursor="pointer" onClick={handleDelete}>
+                            {loadingDelete ? (
+                                <Spinner size="sm"/>
+                            ):(
+                                <>
+                                    <Icon as={AiOutlineDelete} mr={2} />
+                                    <Text fontSize="9pt">Delete</Text>
+                                </>
+                            )}
                        </Flex>
                     )}
                 </Flex>

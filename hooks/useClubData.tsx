@@ -1,4 +1,5 @@
-import { collection, doc, getDocs, increment, writeBatch } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, increment, writeBatch } from 'firebase/firestore';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useRecoilState, useSetRecoilState } from 'recoil';
@@ -13,6 +14,7 @@ const useClubData = () => {
     const setAuthModalState=useSetRecoilState(authModalState);
     const [loading,setLoading]=useState(false);
     const [error,setError]=useState("");
+    const router=useRouter();
 
     const onJoinOrLeaveClub=(clubData:club,isJoined:boolean)=>{
         //check if user is signed in
@@ -104,10 +106,36 @@ const useClubData = () => {
         setLoading(false);
     };
 
+    const getClubData= async (clubId:string)=>{
+        try {
+            const clubDocRef=doc(firestore,"clubs",clubId);
+            const clubDoc= await getDoc(clubDocRef);
+            setClubStateValue((prev)=>({
+                ...prev,
+                currentClub:{id:clubDoc.id,...clubDoc.data()} as club,
+            }))
+        } catch (error) {
+            console.log("getClubData error",error);
+        }
+    };
+
     useEffect(()=>{
-        if(!user) return;
+        if(!user) {
+            setClubStateValue((prev)=>({
+                ...prev,
+                mySnippets:[],
+            }));
+            return;
+        }
         getMySnippets()
     },[user])
+
+    useEffect(()=>{
+        const {clubId}=router.query;
+        if(clubId && !clubStateValue.currentClub){
+            getClubData(clubId as string)
+        }
+    },[router.query,clubStateValue.currentClub]);
 
     return {
         clubStateValue,
