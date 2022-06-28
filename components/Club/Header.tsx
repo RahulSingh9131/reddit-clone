@@ -16,8 +16,17 @@ const Header:React.FC<HeaderProps> = ({clubData}) => {
             <Box height="50%" bg="blue.500" />
             <Flex justify="center" bg="white" flexGrow={1}>
                 <Flex width="95%" maxWidth="660px">
-                    {clubData.imageURL? (
-                       <Image/>
+                    {clubStateValue.currentClub?.imageURL ? (
+                       <Image 
+                        src={clubStateValue.currentClub.imageURL} 
+                        borderRadius="full"
+                        boxSize="60px"
+                        alt="club iamge"
+                        position="relative"
+                        top={-3}
+                        color="blue.500"
+                        border="4px solid white"
+                       />
                     ):(
                       <Icon 
                         as={FaHome} 

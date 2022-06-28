@@ -17,6 +17,7 @@ export interface ClubSnippet{
 
 interface ClubState{
     mySnippets:ClubSnippet[];
+    currentClub?:club,
 }
 
 const defaultClubState:ClubState={

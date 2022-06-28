@@ -53,8 +53,8 @@ const Posts:React.FC<PostsProps> = ({clubData}) => {
                             userIsCreator={user?.uid===item.creatorId} 
                             onSelectPost={onSelectPost} 
                             onDeletePost={onDeletePost} 
+                            userVoteValue={postStateValue.postVotes.find((vote)=>vote.postId===item.id)?.voteValue}
                             onVote={onVote} 
-                            userVoteValue={undefined}
                         />
                     ))}
                 </Stack>
