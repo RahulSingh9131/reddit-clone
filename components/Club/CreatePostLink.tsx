@@ -8,12 +8,14 @@ import { IoImageOutline } from 'react-icons/io5';
 import { useSetRecoilState } from 'recoil';
 import { authModalState } from '../../atoms/authModalAtom';
 import { auth } from '../../firebase/clientApp';
+import useDirectory from '../../hooks/useDirectory';
 
 
 const CreatePostLink:React.FC = () => {
     const [user]=useAuthState(auth);
     const router=useRouter();
     const setAuthModalState=useSetRecoilState(authModalState);
+    const {toggleMenuOpen}=useDirectory();
 
     const onClick=()=>{
         if(!user){
@@ -21,7 +23,11 @@ const CreatePostLink:React.FC = () => {
             return;
         }
         const {clubId}=router.query;
-        router.push(`/r/${clubId}/submit`);
+        if(clubId){
+          router.push(`/r/${clubId}/submit`);
+          return;
+        }
+        toggleMenuOpen();
     }
     
     return (
