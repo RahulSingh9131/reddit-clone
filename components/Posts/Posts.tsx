@@ -38,7 +38,7 @@ const Posts:React.FC<PostsProps> = ({clubData}) => {
 
     useEffect(()=>{
         getPosts();
-    },[])
+    },[clubData])
     
     return (
         <>

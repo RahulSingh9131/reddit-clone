@@ -58,6 +58,7 @@ const useClubData = () => {
          const newSnippet:ClubSnippet={
              clubId:clubData.id,
              imageURL:clubData.imageURL || "",
+             isModerator:user?.uid===clubData.creatorId,
             };
             batch.set(doc(firestore,`users/${user?.uid}/clubSnippets`,clubData.id),newSnippet);
             

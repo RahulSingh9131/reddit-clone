@@ -27,7 +27,7 @@ const ClubPage:React.FC<clubPageProps> = ({clubData}) => {
             ...prev,
             currentClub:clubData,
         }))
-    },[])
+    },[clubData])
     
     return (
         <>
