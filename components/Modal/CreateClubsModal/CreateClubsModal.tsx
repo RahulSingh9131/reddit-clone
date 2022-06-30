@@ -1,8 +1,10 @@
 import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Box, Text, Input } from '@chakra-ui/react';
 import { doc, getDoc, runTransaction, serverTimestamp, setDoc } from 'firebase/firestore';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, firestore } from '../../../firebase/clientApp';
+import useDirectory from '../../../hooks/useDirectory';
 
 type CreateClubsModalProps = {
     open:boolean;
@@ -15,6 +17,8 @@ const CreateClubsModal:React.FC<CreateClubsModalProps> = ({open,handleClose}) =>
     const [charCount,setCharCount]=useState(20);
     const [error,setError]=useState("");
     const [loading,setLoading]=useState(false);
+    const router=useRouter();
+    const {toggleMenuOpen}=useDirectory();
 
     const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
         if(e.target.value.length>20) return;
@@ -55,7 +59,9 @@ const CreateClubsModal:React.FC<CreateClubsModalProps> = ({open,handleClose}) =>
               isModerator:true,
             })
           })
-    
+          handleClose();
+          toggleMenuOpen();
+          router.push(`r/${clubName}`);
         } catch (error: any) {
             console.log("handleCreateClub error",error)
             setError(error.message);
