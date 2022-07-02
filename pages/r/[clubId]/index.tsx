@@ -18,16 +18,17 @@ type clubPageProps = {
 
 const ClubPage:React.FC<clubPageProps> = ({clubData}) => {
     const setClubStateValue=useSetRecoilState(clubState);
-    if(!clubData){
-        return <NotFound/>
-    }
-
+    
     useEffect(()=>{
         setClubStateValue((prev)=>({
             ...prev,
             currentClub:clubData,
         }))
     },[clubData])
+    
+    if(!clubData){
+        return <NotFound/>
+    }
     
     return (
         <>

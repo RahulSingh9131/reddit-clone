@@ -12,10 +12,9 @@ const SearchInput:React.FC<SearchInputProps> = ({user}) => {
     return (
         <Flex flexGrow={1} mr={2} ml={2} maxWidth={user ? "auto" : "600px"} align="center">
             <InputGroup>
-                <InputLeftElement
-                    pointerEvents='none'
-                    children={<SearchIcon color='gray.300' mb={1} />}
-                />
+                <InputLeftElement pointerEvents='none'>
+                    <SearchIcon color='gray.300' mb={1} />
+                </InputLeftElement>
                 <Input 
                     type='tel' 
                     placeholder='Searh posts' 
