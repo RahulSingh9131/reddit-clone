@@ -14,6 +14,7 @@ import TabItem from './TabItem';
 
 type NewPostFormProps = {
     user: User;
+    clubImageURL?:string;
 };
 
 const formTabs:TabItem[]=[
@@ -32,7 +33,7 @@ export type TabItem={
     icon: typeof Icon.arguments;
 }
 
-const NewPostForm:React.FC<NewPostFormProps> = ({user}) => {
+const NewPostForm:React.FC<NewPostFormProps> = ({user,clubImageURL}) => {
     const [selectedTab,setSelectedTab]=useState(formTabs[0].title);
     const [textInputs,setTextInputs]=useState({
         title:"",
@@ -48,6 +49,7 @@ const NewPostForm:React.FC<NewPostFormProps> = ({user}) => {
         //create new post object => type Post
         const newPost:Post={
             clubId:clubId as string,
+            clubImageURL:clubImageURL || "",
             creatorId: user?.uid,
             creatorDisplayName:user.email!.split("@")[0],
             title:textInputs.title,

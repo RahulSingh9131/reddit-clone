@@ -20,7 +20,7 @@ const submitPostPage:React.FC= () => {
                 <Box padding="14px 0px" borderBottom="1px solid" borderColor="white">
                     <Text>Create a Post</Text>
                 </Box>
-                {user && <NewPostForm user={user}/>}
+                {user && <NewPostForm user={user} clubImageURL={clubStateValue.currentClub?.imageURL}/>}
             </>
             <>
                 {clubStateValue.currentClub && <About clubData={clubStateValue.currentClub}/>}

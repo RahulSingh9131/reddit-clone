@@ -18,10 +18,12 @@ export interface ClubSnippet{
 interface ClubState{
     mySnippets:ClubSnippet[];
     currentClub?:club,
+    snippetsFetched:boolean;
 }
 
 const defaultClubState:ClubState={
     mySnippets:[],
+    snippetsFetched:false,
 }
 
 export const clubState=atom<ClubState>({

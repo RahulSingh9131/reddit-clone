@@ -11,8 +11,10 @@ import {
   IoArrowUpCircleSharp,
   IoBookmarkOutline,
 } from "react-icons/io5";
+import { FaUser } from 'react-icons/fa';
 import moment from 'moment';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 type PostItemProps = {
     post:Post;
@@ -21,9 +23,10 @@ type PostItemProps = {
     onVote:(event:React.MouseEvent<SVGElement,MouseEvent>,post:Post,vote:number,clubId:string)=>void;
     onDeletePost:(post:Post)=>Promise<Boolean>;
     onSelectPost?:(post:Post)=>void;
+    homePage?:boolean;
 };
 
-const PostItem:React.FC<PostItemProps> = ({post,onDeletePost,onSelectPost,onVote,userIsCreator,userVoteValue}) => {
+const PostItem:React.FC<PostItemProps> = ({post,onDeletePost,onSelectPost,onVote,userIsCreator,userVoteValue,homePage}) => {
     const [loadingImage,setLoadingImage]=useState(true)
     const [error,setError]=useState("");
     const [loadingDelete,setLoadingDelete]=useState(false)
@@ -83,6 +86,26 @@ const PostItem:React.FC<PostItemProps> = ({post,onDeletePost,onSelectPost,onVote
                 )}
                 <Stack spacing={1} p="10px">
                     <Stack direction="row" spacing={0.6} align="center" fontSize="9pt">
+                        {homePage && (
+                            <>
+                                {post.clubImageURL ? (
+                                    <Image 
+                                        src={post.clubImageURL}
+                                        borderRadius="full"
+                                        boxSize="22px"
+                                        mr={2}
+                                    />
+                                ):(
+                                    <Icon as={FaUser} color="blue.500" fontSize="10pt" mr={1}/>
+                                )}
+                                <Link href={`r/${post.clubId}`}>
+                                    <Text fontWeight={600} _hover={{textDecoration:"underline"}} onClick={(event)=>event.stopPropagation()}>
+                                        {`r/${post.clubId}`}
+                                    </Text>
+                                </Link>
+                                <Icon as={BsDot} color="gray.500" fontSize={10}/>
+                            </>
+                        )}
                         <Text fontWeight={400}>
                             Posted by {post.creatorDisplayName}{" "}
                             {moment(new Date(post.createdAt.seconds*1000)).fromNow()}

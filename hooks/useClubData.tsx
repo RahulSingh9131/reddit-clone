@@ -40,7 +40,8 @@ const useClubData = () => {
             const snippets=snippetDocs.docs.map((doc)=>({...doc.data()}));
             setClubStateValue(prev=>({
                 ...prev,
-                mySnippets:snippets as ClubSnippet[]
+                mySnippets:snippets as ClubSnippet[],
+                snippetsFetched:true,
             }))
         } catch (error:any) {
             console.log("getMySnippets error",error);
@@ -125,6 +126,7 @@ const useClubData = () => {
             setClubStateValue((prev)=>({
                 ...prev,
                 mySnippets:[],
+                snippetsFetched:false,
             }));
             return;
         }
