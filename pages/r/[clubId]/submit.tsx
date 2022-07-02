@@ -1,8 +1,6 @@
 import { Box, Text } from '@chakra-ui/react';
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useRecoilValue } from 'recoil';
-import { clubState } from '../../../atoms/clubsAtom';
 import About from '../../../components/Club/About';
 import PageContent from '../../../components/Layout/PageContent';
 import NewPostForm from '../../../components/Posts/NewPostForm';
@@ -11,7 +9,7 @@ import useClubData from '../../../hooks/useClubData';
 
 
 
-const submitPostPage:React.FC= () => {
+const SubmitPostPage:React.FC= () => {
     const [user]=useAuthState(auth);
     const {clubStateValue}=useClubData();
     return (
@@ -28,4 +26,4 @@ const submitPostPage:React.FC= () => {
         </PageContent>
     )
 }
-export default submitPostPage;
+export default SubmitPostPage;
