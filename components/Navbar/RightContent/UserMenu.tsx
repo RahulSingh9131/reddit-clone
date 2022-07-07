@@ -7,6 +7,7 @@ import { auth } from '../../../firebase/clientApp';
 import { useResetRecoilState, useSetRecoilState } from 'recoil';
 import { authModalState } from '../../../atoms/authModalAtom';
 import { clubState } from '../../../atoms/clubsAtom';
+import Link from 'next/link';
 
 type UserMenuProps = {
     user?:User | null;
@@ -41,10 +42,12 @@ const UserMenu:React.FC<UserMenuProps> = ({user}) => {
                 {user?(
                     <>
                         <MenuItem fontSize="10pt" fontWeight={700} _hover={{bg:"blue.200"}}>
-                            <Flex align="center">
-                                <Icon as={FaUserCircle} mr={2} fontSize={20}/>
-                                Profile
-                            </Flex>
+                            <Link href="/profile">
+                                <Flex align="center">
+                                    <Icon as={FaUserCircle} mr={2} fontSize={20}/>
+                                    Profile
+                                </Flex>
+                            </Link>
                         </MenuItem>
                         <MenuItem fontSize="10pt" fontWeight={700} _hover={{bg:"blue.200"}} onClick={logout}>
                             <Flex align="center">
