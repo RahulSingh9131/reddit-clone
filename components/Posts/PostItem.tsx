@@ -11,10 +11,15 @@ import {
   IoArrowUpCircleSharp,
   IoBookmarkOutline,
 } from "react-icons/io5";
-import { FaUser } from 'react-icons/fa';
+import { FaUser,FaBookmark } from 'react-icons/fa';
 import moment from 'moment';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { userState } from '../../atoms/userAtom';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../../firebase/clientApp';
+import { authModalState } from '../../atoms/authModalAtom';
 
 type PostItemProps = {
     post:Post;
@@ -24,14 +29,18 @@ type PostItemProps = {
     onDeletePost:(post:Post)=>Promise<Boolean>;
     onSelectPost?:(post:Post)=>void;
     homePage?:boolean;
+    myBookmark?:boolean;
 };
 
-const PostItem:React.FC<PostItemProps> = ({post,onDeletePost,onSelectPost,onVote,userIsCreator,userVoteValue,homePage}) => {
+const PostItem:React.FC<PostItemProps> = ({post,onDeletePost,onSelectPost,onVote,userIsCreator,userVoteValue,homePage,myBookmark}) => {
     const [loadingImage,setLoadingImage]=useState(true)
+    const [user]=useAuthState(auth);
+    const setAuthModalState=useSetRecoilState(authModalState);
     const [error,setError]=useState("");
     const [loadingDelete,setLoadingDelete]=useState(false)
     const singlePostPage=!onSelectPost;
     const router=useRouter();
+    const [userStateValue,setUserStateValue]=useRecoilState(userState);
 
     const handleDelete= async (event:React.MouseEvent<HTMLDivElement,MouseEvent>)=>{
         event.stopPropagation();
@@ -48,6 +57,26 @@ const PostItem:React.FC<PostItemProps> = ({post,onDeletePost,onSelectPost,onVote
             setError(error.message);
         }
         setLoadingDelete(false);
+    }
+
+    const addBookmark=(event:React.MouseEvent<SVGElement, MouseEvent>)=>{
+        event.stopPropagation();
+        if(!user){
+            setAuthModalState({open:true,view:"login"});
+            return;
+        }
+        setUserStateValue((prev)=>({
+            ...prev,
+            myBookmarks:[...prev.myBookmarks,post] as Post[],
+        }))
+    }
+
+    const removeBookmark=(event:React.MouseEvent<SVGElement, MouseEvent>)=>{
+        event.stopPropagation();
+        setUserStateValue((prev)=>({
+            ...prev,
+            myBookmarks:prev.myBookmarks.filter((item)=>item.id!==post.id),
+        }))
     }
 
     return (
@@ -122,32 +151,40 @@ const PostItem:React.FC<PostItemProps> = ({post,onDeletePost,onSelectPost,onVote
                         </Flex>
                     )}
                 </Stack>
-                <Flex ml={1} mb={0.5} color="gray.500" fontWeight={600}>
-                    <Flex align="center" p="8px 10px" borderRadius={4} _hover={{bg:"gray.200"}} cursor="pointer">
-                        <Icon as={BsChat} mr={2} />
-                        <Text fontSize="9pt">{post.numberOfComments}</Text>
-                    </Flex>
-                    <Flex align="center" p="8px 10px" borderRadius={4} _hover={{bg:"gray.200"}} cursor="pointer">
-                        <Icon as={IoArrowRedoOutline} mr={2} />
-                        <Text fontSize="9pt">Share</Text>
-                    </Flex>
-                    <Flex align="center" p="8px 10px" borderRadius={4} _hover={{bg:"gray.200"}} cursor="pointer">
-                        <Icon as={IoBookmarkOutline} mr={2} />
-                        <Text fontSize="9pt">Save</Text>
-                    </Flex>
-                    {userIsCreator && (
-                        <Flex align="center" p="8px 10px" borderRadius={4} _hover={{bg:"gray.200"}} cursor="pointer" onClick={handleDelete}>
-                            {loadingDelete ? (
-                                <Spinner size="sm"/>
-                            ):(
-                                <>
-                                    <Icon as={AiOutlineDelete} mr={2} />
-                                    <Text fontSize="9pt">Delete</Text>
-                                </>
+                {!myBookmark && (
+                    <>
+                        <Flex ml={1} mb={0.5} color="gray.500" fontWeight={600}>
+                            <Flex align="center" p="8px 10px" borderRadius={4} _hover={{bg:"gray.200"}} cursor="pointer">
+                                <Icon as={BsChat} mr={2} />
+                                <Text fontSize="9pt">{post.numberOfComments}</Text>
+                            </Flex>
+                            <Flex align="center" p="8px 10px" borderRadius={4} _hover={{bg:"gray.200"}} cursor="pointer" onClick={(event)=>event.stopPropagation()}>
+                                <Icon as={IoArrowRedoOutline} mr={2} />
+                                <Text fontSize="9pt">Share</Text>
+                            </Flex>
+                            <Flex align="center" p="8px 10px" borderRadius={4} _hover={{bg:"gray.200"}} cursor="pointer" onClick={(event)=>event.stopPropagation()}>
+                                {userStateValue.myBookmarks.some((item)=>item.id===post.id)?(
+                                    <Icon as={FaBookmark} mr={2} color="brand.100" onClick={(event)=>removeBookmark(event)}/>
+                                ):(
+                                <Icon as={IoBookmarkOutline} mr={2}  onClick={(event)=>addBookmark(event)}/>
+                                )}
+                                <Text fontSize="9pt">Save</Text>
+                            </Flex>
+                            {userIsCreator && (
+                                <Flex align="center" p="8px 10px" borderRadius={4} _hover={{bg:"gray.200"}} cursor="pointer" onClick={handleDelete}>
+                                    {loadingDelete ? (
+                                        <Spinner size="sm"/>
+                                    ):(
+                                        <>
+                                            <Icon as={AiOutlineDelete} mr={2} />
+                                            <Text fontSize="9pt">Delete</Text>
+                                        </>
+                                    )}
+                                </Flex>
                             )}
-                       </Flex>
-                    )}
-                </Flex>
+                        </Flex>
+                    </>
+                )}  
             </Flex>
         </Flex>
     )
