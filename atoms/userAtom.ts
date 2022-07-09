@@ -2,7 +2,7 @@ import { User } from "firebase/auth";
 import { atom } from "recoil";
 import { Post } from "./postsAtom";
 
-interface userState{
+export interface userState{
     currentUser?:User;
     myBookmarks:Post[];
 }
