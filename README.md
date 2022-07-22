@@ -1,34 +1,43 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1>Reddit-Clone</h1>
 
-## Getting Started
+*********************
 
-First, run the development server:
+<h3>Basic Info</h3>
+<ul>
+  <li>I have used Nextjs for building this.</li>
+  <li>This app is using firebase for storing users and post related info</li>
+  <li>The UI is made using chakraUI </li>
+  <li>Used Recoil for managing state globally </li>
+  <li>Added Typescript for making the code more reliable</li>
+</ul>
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+*******************
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<h3>Features</h3>
+<ul>
+  <li>User can signUp and login with their credentials.</li>
+  <li>User can signUp and login with their Google Account too.</li>
+  <li>User can retrieve their password by clicking on forget password link.</li>
+  <li>User can create their own clubs from the navigation bar </li>
+  <li>User can join many clubs from the top clubs list in homePage</li>
+  <li>User can create post in the clubs created.</li>
+  <li>User can upvote/downvote a post.</li>
+  <li>User can Bookmark a particular post.</li>
+  <li>User can comment on a particular post/ delete their their own post.</li>
+  <li>User can update their profile picture / their created club picture.</li>
+  <li>User can see explore page by joining others club too</li>
+</ul>
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+******************
+<p>Live link is here 👉 - https://social-club-next.vercel.app/</p>
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+<p> To run this app locally , first clone this repositiry using git clone and install all the dependencies and start the development server using npm start.</p>
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+******************
+<h3>Some Preview Images</h3>
 
-## Learn More
+![social-club1](https://user-images.githubusercontent.com/87935709/180445016-d7559c38-83a7-4515-b4e0-8cb46c5c487b.JPG)
+![social-club2](https://user-images.githubusercontent.com/87935709/180445073-59b0cee1-2cf5-431e-8420-af337609c2e5.JPG)
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
